@@ -24,11 +24,21 @@ def add_layer(inputs,in_size,out_size,activation_function=None):
         outputs =activation_function(Wx_plus_b)
     return outputs
 
-
+#计算准确度的功能：
 def compute_accuracy(v_xs,v_ys):
+    global prediction
+    y_pre = sess.run(prediction,feed_dict={xs:v_xs})
+    correct_prediction = tf.equal(tf.argmax(y_pre,1),tf.arg_max(v_ys,1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
+    result = sess.run(accuracy,feed_dict = {xs:v_xs,ys:v_ys})
+    return result
+
+
+
+
 # define placeholder for inputs to network
 xs = tf.placeholder(tf.float32,[None,784])         #每张图片784个数据点 28*28
-xs = tf.placeholder(tf.float32,[None,10])
+ys = tf.placeholder(tf.float32,[None,10])          #预测的是0-9这10个数字，所以预测值为10
 
 
 # add output layer
@@ -51,8 +61,9 @@ for i in range(1000):
     #使用SGD（stochastic gradient decent）法分割数据，每次仅学习100个，提高学习效率
     batch_xs,batch_ys = mnist.train.next_batch(100)
     sess.run(train_step,feed_dict={xs:batch_xs,ys:batch_ys})
-    if i %50 ==o:
-        print(compute_accuracy(mnist.))
+    if i %25 ==0:
+        #输出准确率
+        print(compute_accuracy(mnist.test.images,mnist.test.labels))
 
 
 

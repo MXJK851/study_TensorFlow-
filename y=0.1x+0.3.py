@@ -29,3 +29,4 @@ for step in range (201):
     #每隔着20步就输出一次 Weights和biases 
     if step % 20 == 0: 
         print(step,sess.run(Weights),sess.run(biases)) 
+        
